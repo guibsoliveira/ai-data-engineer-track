@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Resumo — Ciclo 1.1: Grão, Dimensão vs Fato e Aditividade</title>
+<style>
+  :root {
+    --ink: #1c2430;
+    --muted: #5b6776;
+    --line: #e3e8ee;
+    --accent: #2d6a4f;
+    --accent-soft: #eaf3ee;
+    --warn: #9a3412;
+    --warn-soft: #fcefe7;
+    --bg: #fbfcfd;
+    --card: #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 17px/1.65 -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 56px 24px 96px; }
+  header { border-bottom: 2px solid var(--line); padding-bottom: 28px; margin-bottom: 8px; }
+  .kicker { text-transform: uppercase; letter-spacing: .08em; font-size: 12px; font-weight: 700; color: var(--accent); margin: 0 0 10px; }
+  h1 { font-size: 30px; line-height: 1.2; margin: 0 0 8px; }
+  .date { color: var(--muted); font-size: 14px; margin: 0 0 18px; }
+  .lead { color: var(--muted); font-size: 16px; margin: 0; }
+  h2 { font-size: 21px; margin: 44px 0 6px; }
+  h2 .num { color: var(--accent); font-weight: 800; margin-right: 8px; }
+  h3 { font-size: 16px; margin: 24px 0 4px; }
+  p { margin: 10px 0; }
+  code { background: #eef2f6; padding: 1px 6px; border-radius: 5px; font-size: .9em; font-family: "SF Mono", Consolas, "Roboto Mono", monospace; }
+  .tool {
+    background: var(--accent-soft);
+    border-left: 4px solid var(--accent);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 18px 0;
+  }
+  .tool strong { color: var(--accent); }
+  .warn {
+    background: var(--warn-soft);
+    border-left: 4px solid var(--warn);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 18px 0;
+  }
+  .warn strong { color: var(--warn); }
+  table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { background: #f3f6f9; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); }
+  td:first-child { color: var(--muted); width: 30%; }
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 18px 0; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; }
+  .card h4 { margin: 0 0 6px; font-size: 15px; color: var(--accent); }
+  .card p { margin: 0; font-size: 14.5px; color: var(--ink); }
+  ul { margin: 10px 0; padding-left: 22px; }
+  li { margin: 6px 0; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--line); color: var(--muted); font-size: 13px; }
+  @media (max-width: 560px) { .cards { grid-template-columns: 1fr; } main { padding: 36px 18px 64px; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <p class="kicker">AI/Data Engineer Track &middot; Ciclo 1 &middot; Unidade 1.1</p>
+    <h1>Grão, Dimensão vs Fato e Aditividade</h1>
+    <p class="date">Aula de 16 de junho de 2026 &middot; bancada: migração EDF (Gennera &rarr; TOTVS)</p>
+    <p class="lead">Resumo para revisão. Tudo aterrado nas views reais do banco. Sem dados de aluno; só nomes de tabelas, colunas e conceitos.</p>
+  </header>
+
+  <section>
+    <h2><span class="num">1.</span>O grão (grain)</h2>
+    <p><strong>Grão é a resposta para a pergunta "o que é UMA linha desta tabela?".</strong> Você responde sempre no formato <code>uma linha por ___</code>. É a primeira pergunta da modelagem porque tudo depende dela: o que pode somar, o que pode juntar sem duplicar, se um número no relatório é verdade ou ilusão.</p>
+
+    <div class="tool">
+      <strong>Ferramenta — Teste da unicidade.</strong> Para saber se o grão está completo, pergunte:
+      <em>"existem duas linhas com TUDO isso igual e mesmo assim diferentes?"</em>
+      Se existem, falta coluna &mdash; acrescente o que as diferencia. Se não existem, o grão fechou.
+    </div>
+
+    <p>Exemplo trabalhado na aula &mdash; o grão da <code>sbolsaaluno</code> (o desconto concedido a um aluno):</p>
+    <ul>
+      <li><code>uma linha por contrato</code> &rarr; <strong>reprova</strong>: no mesmo contrato cabem dois descontos (um na mensalidade, outro no material).</li>
+      <li>Acrescenta o serviço e o tipo de bolsa &rarr; <code>uma linha por contrato + serviço + tipo de bolsa</code> &rarr; <strong>passa</strong>.</li>
+    </ul>
+
+    <div class="tool">
+      <strong>Ferramenta — Carona.</strong> Acrescentar uma coluna que já é <em>determinada</em> por outra que você tem não refina o grão. Ex.: dado o <code>contrato</code>, o <code>período letivo</code> já está decidido &mdash; ele não varia dentro de um contrato, então é carona. Refinar grão é acrescentar algo que pode <em>variar</em> enquanto o resto fica igual. (Esse cheiro de "coluna que depende de outra" volta na normalização, Unidade 1.2.)
+    </div>
+
+    <p><strong>Grão é uma decisão, não um destino da fonte.</strong> Você pode <em>afinar</em> acrescentando colunas, ou <em>engrossar</em> agregando. A <code>sbolsaaluno</code> comprime todas as parcelas de um desconto numa faixa (<code>PARCELAINICIAL</code> &rarr; <code>PARCELAFINAL</code>): o autor tirou <code>parcela</code> do grão de propósito.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">2.</span>Dimensão vs Fato</h2>
+    <p>Depois de declarar o grão, a linha tem uma de duas naturezas:</p>
+    <ul>
+      <li><strong>Dimensão</strong> = a linha é uma <strong>coisa que existe e se descreve</strong> (um aluno, um tipo de bolsa, um plano). Quase não muda. Você <strong>filtra e agrupa POR</strong> ela. Tem atributos, não medidas.</li>
+      <li><strong>Fato</strong> = a linha é um <strong>acontecimento</strong>, normalmente datado, que você quer medir (uma parcela cobrada, uma nota lançada, uma matrícula). É onde você <strong>soma e conta</strong>.</li>
+    </ul>
+    <p>Frase de bolso: <strong>dimensão você agrupa POR; fato você SOMA.</strong> E o teste de fogo nunca é "tem número?", e sim <strong>"a linha é uma coisa ou um acontecimento?"</strong>.</p>
+
+    <h3>A pegadinha de ouro: a coluna <code>VALOR</code></h3>
+    <p>As duas tabelas têm uma coluna chamada <code>VALOR</code> &mdash; e ela significa o oposto em cada uma:</p>
+    <table>
+      <tr><th></th><th>sbolsa (dimensão)</th><th>sparcela (fato)</th></tr>
+      <tr><td>Grão (uma linha por&hellip;)</td><td>um tipo de bolsa que a escola oferece</td><td>uma parcela cobrada de um aluno</td></tr>
+      <tr><td>Natureza</td><td>dimensão (catálogo)</td><td>fato (evento financeiro datado)</td></tr>
+      <tr><td>O que <code>VALOR</code> é</td><td>o percentual padrão do desconto</td><td>o dinheiro real daquele boleto</td></tr>
+      <tr><td>Posso somar?</td><td><strong>Não</strong> &mdash; 50% + Integral = nada</td><td><strong>Sim</strong> &mdash; vira receita</td></tr>
+    </table>
+    <p>Reforço dos dois lados: <code>saluno</code> nasce de um evento (matrícula) mas é <em>achatada</em> em dimensão por <code>DISTINCT ON (ra)</code>; e <code>smatricula</code> <strong>não tem coluna de somar</strong> e ainda é fato (a medida é o <code>COUNT(*)</code>: "quantas matrículas?"). <strong>Fato sem número existe; dimensão com número existe.</strong> O que decide é o grão.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">3.</span>Atributo vs Medida (papel da coluna)</h2>
+    <p>"Coluna" é o nome físico. No modelo, a coluna exerce um papel:</p>
+    <ul>
+      <li>Numa dimensão, as colunas descritivas são <strong>atributos</strong> (você filtra/agrupa por elas).</li>
+      <li>Num fato, as colunas numéricas que você agrega são <strong>medidas</strong> (ou métricas).</li>
+    </ul>
+    <p>Por isso <code>VALOR</code> da <code>sbolsa</code> é atributo (taxa de catálogo) e <code>VALOR</code> da <code>sparcela</code> é medida (dinheiro real). Mesma palavra, papéis diferentes.</p>
+  </section>
+
+  <section>
+    <h2><span class="num">4.</span>Aditividade</h2>
+    <p>Um número é somável quando somá-lo produz um total que ainda significa algo na mesma unidade. R$100 + R$200 = R$300 (faz sentido). 50% + 50% = 100% de quê? (não faz). Três sabores:</p>
+    <ul>
+      <li><strong>Aditiva</strong> &mdash; soma faz sentido em qualquer direção. Ex.: <code>VALOR</code> da parcela (por aluno, por serviço, por mês, por ano).</li>
+      <li><strong>Não-aditiva</strong> &mdash; soma nunca faz sentido. Ex.: percentual de bolsa, taxa, índice, número de parcela.</li>
+      <li><strong>Semi-aditiva</strong> &mdash; soma faz sentido em algumas direções e em outras não.</li>
+    </ul>
+
+    <div class="tool">
+      <strong>Ferramenta — "qual? vs quanto?"</strong> O número responde <em>"qual?"</em> (qual parcela, qual aluno, qual plano) &rarr; ele <strong>rotula</strong>, não soma. Responde <em>"quanto?"</em> (quanto custou, quantos) &rarr; ele <strong>mede</strong>, pode somar. <code>PARCELA</code> responde "qual?"; <code>VALOR</code> responde "quanto?".
+    </div>
+
+    <h3>A nota é o caso semi-aditivo</h3>
+    <p><code>NOTAFALTA</code> mostra que aditividade é <strong>por dimensão</strong>. Somar a nota de um aluno através das <em>etapas</em> pode fazer sentido (se a regra da escola for soma dos trimestres); somar através dos <em>alunos</em> ou das <em>disciplinas</em> é lixo. A pergunta certa nunca é "posso somar?", e sim <strong>"posso somar ATRAVÉS de QUAL dimensão?"</strong>. (Cuidado: média e taxa não rolam para cima por soma &mdash; some os valores crus e divida.)</p>
+
+    <div class="warn">
+      <strong>O SUM que mente sem dar erro.</strong> <code>SUM(NOTAFALTA) GROUP BY turma</code> roda numa boa: coluna numérica, operação válida, zero erro, zero aviso &mdash; e o número é semanticamente lixo. O perigo da medida não-aditiva é que <strong>a mentira é silenciosa</strong>. Banco nenhum te protege. A única defesa é saber a aditividade da medida ANTES de somar. Por isso engenheiro de dados <em>declara</em> a aditividade, não confia no "rodou, então tá certo".
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">5.</span>As quatro ferramentas para levar</h2>
+    <div class="cards">
+      <div class="card"><h4>Teste da unicidade</h4><p>Duas linhas com tudo igual e ainda diferentes? Falhou &rarr; acrescenta coluna.</p></div>
+      <div class="card"><h4>Coisa vs acontecimento</h4><p>Coisa que existe &rarr; dimensão (agrupo POR). Acontecimento &rarr; fato (somo/conto).</p></div>
+      <div class="card"><h4>Carona</h4><p>Coluna já determinada por outra não refina o grão.</p></div>
+      <div class="card"><h4>Qual? vs quanto?</h4><p>"Qual?" rotula (não soma). "Quanto?" mede (pode somar).</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2><span class="num">6.</span>Pendente para fechar a Unidade 1.1</h2>
+    <ul>
+      <li>Declarar, em uma frase cada, o grão de 5 views (<code>sbolsa</code>, <code>sservico</code>, <code>splanopgto</code> + 2 à escolha) &mdash; à mão.</li>
+      <li>Para cada view, classificar as colunas numéricas: rótulo ou medida; se medida, aditiva / semi / não-aditiva, e onde um <code>SUM</code> ingênuo mentiria.</li>
+    </ul>
+  </section>
+
+  <footer>
+    Resumo da Unidade 1.1 &middot; gerado em 16/06/2026 &middot; repositório ai-data-engineer-track.<br>
+    Regra da casa: o aluno escreve, o professor revisa. Este resumo é material de revisão, não substitui escrever os exercícios à mão.
+  </footer>
+</main>
+</body>
+</html>
