@@ -28,13 +28,13 @@ na migração EDF na manhã seguinte.
 
 A pergunta mais importante da modelagem: o que cada linha representa?
 
-- [ ] Teoria: grão, tabela-fato, dimensão, aditividade de métricas. Por que somar
+- [x] Teoria: grão, tabela-fato, dimensão, aditividade de métricas. Por que somar
       métrica não-aditiva infla número sem dar erro.
 - [ ] Exercício (você escreve): declarar, em uma frase cada, o grão de 5 views da
       migração EDF (sbolsa, sservico, splanopgto e mais 2 à sua escolha).
 - [ ] Exercício: para cada view, listar quais métricas são aditivas, semi-aditivas
       e não-aditivas — e onde um SUM ingênuo mentiria.
-- [ ] Checkpoint oral: explicar grão para um leigo em 1 minuto, sem consulta.
+- [x] Checkpoint oral: explicar grão para um leigo em 1 minuto, sem consulta.
 
 ## Unidade 1.2 — Star schema e o método Kimball (semana 2)
 
