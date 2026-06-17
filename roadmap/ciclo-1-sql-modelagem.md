@@ -1,7 +1,7 @@
 # Ciclo 1 — SQL e Modelagem Dimensional
 
 **Janela:** ~5 semanas (jun-jul 2026) · **Bancada:** migração EDF (views reais)
-**Status:** EM FOCO · Unidade atual: 1.1
+**Status:** EM FOCO · Unidade atual: 1.2
 
 ## Objetivo do ciclo
 
@@ -30,9 +30,9 @@ A pergunta mais importante da modelagem: o que cada linha representa?
 
 - [x] Teoria: grão, tabela-fato, dimensão, aditividade de métricas. Por que somar
       métrica não-aditiva infla número sem dar erro.
-- [ ] Exercício (você escreve): declarar, em uma frase cada, o grão de 5 views da
+- [x] Exercício (você escreve): declarar, em uma frase cada, o grão de 5 views da
       migração EDF (sbolsa, sservico, splanopgto e mais 2 à sua escolha).
-- [ ] Exercício: para cada view, listar quais métricas são aditivas, semi-aditivas
+- [x] Exercício: para cada view, listar quais métricas são aditivas, semi-aditivas
       e não-aditivas — e onde um SUM ingênuo mentiria.
 - [x] Checkpoint oral: explicar grão para um leigo em 1 minuto, sem consulta.
 

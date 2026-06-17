@@ -9,7 +9,7 @@ por sessões de Claude Code neste repositório (protocolo em `CLAUDE.md`).
 | | |
 |---|---|
 | **Ciclo em foco** | Ciclo 1 — SQL e Modelagem Dimensional |
-| **Unidade atual** | 1.1 — O grão |
+| **Unidade atual** | 1.2 — Star schema e Kimball |
 | **Início da trilha** | 2026-06-11 |
 | **Constante diária** | Inglês 30 min (`roadmap/ingles-trilha-diaria.md`) |
 
