@@ -40,11 +40,11 @@ A pergunta mais importante da modelagem: o que cada linha representa?
 
 - [ ] Teoria: os 4 passos de Kimball (processo de negócio → grão → dimensões →
       fatos); star vs snowflake; por que o analítico desnormaliza de propósito.
-- [ ] Exercício (papel ou dbdiagram.io, você desenha): o star schema do financeiro
+- [x] Exercício (papel ou dbdiagram.io, você desenha): o star schema do financeiro
       EDF — fato_cobranca + dim_aluno, dim_responsavel, dim_plano, dim_tempo.
 - [ ] Exercício: identificar nas suas views atuais onde nasceu uma "big flat
       table" e o que ela esconde.
-- [ ] Checkpoint: defender o seu modelo — o professor ataca com perguntas de
+- [x] Checkpoint: defender o seu modelo — o professor ataca com perguntas de
       negócio ("e se a escola pedir X?") e o modelo tem que responder.
 
 ## Unidade 1.3 — Histórico: Slowly Changing Dimensions (semana 3)
